@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takoyaki - Japanese Street Food Presentation</title>
+    <style>
+        /* ==================== RESET & BASE STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color palette */
+            --primary-red: #C7362F;
+            --primary-red-dark: #A02820;
+            --bg-light: #FFFFFF;
+            --bg-dark: #1a1a1a;
+            --text-light: #333333;
+            --text-dark: #E5E5E5;
+            --accent-light: #F5F5F5;
+            --accent-dark: #2a2a2a;
+            
+            /* Dynamic colors (change with theme) */
+            --bg-color: var(--bg-light);
+            --text-color: var(--text-light);
+            --accent-color: var(--accent-light);
+            --card-bg: #FFFFFF;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: var(--bg-dark);
+            --text-color: var(--text-dark);
+            --accent-color: var(--accent-dark);
+            --card-bg: #2a2a2a;
+            --shadow: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ==================== HEADER ==================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            background: var(--bg-color);
+            box-shadow: 0 2px 10px var(--shadow);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--accent-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-indicator {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* ==================== MAIN CONTAINER ==================== */
+        main {
+            margin-top: 70px;
+            position: relative;
+        }
+
+        .section {
+            min-height: calc(100vh - 70px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-content {
+            max-width: 1200px;
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* ==================== SECTION 1: HERO ==================== */
+        .hero-content {
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            color: var(--primary-red);
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-question {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            font-weight: 400;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(199, 54, 47, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(199, 54, 47, 0.4);
+        }
+
+        /* ==================== SECTION 2: WHAT IS TAKOYAKI ==================== */
+        .definition-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .definition-text {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            max-width: 700px;
+            line-height: 1.8;
+        }
+
+        .definition-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            object-fit: cover;
+        }
+
+        /* ==================== SECTION 3: ORIGIN & HISTORY ==================== */
+        .history-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .history-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .history-list li {
+            padding: 1rem 0;
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .history-list li:before {
+            content: "🔸";
+            margin-right: 0.5rem;
+        }
+
+        .story-nugget {
+            background: var(--primary-red);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-style: italic;
+            box-shadow: 0 8px 25px rgba(199, 54, 47, 0.3);
+        }
+
+        /* ==================== SECTION 4: INGREDIENTS ==================== */
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .ingredient-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .ingredient-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .ingredient-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ingredient-name {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* ==================== SECTION 5: HOW IT'S MADE ==================== */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--primary-red);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .process-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px var(--shadow);
+            margin-top: 2rem;
+        }
+
+        /* ==================== SECTION 6: TRY & REACT (POLL) ==================== */
+        .poll-container {
+            text-align: center;
+        }
+
+        .poll-question {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+
+        .poll-options {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .poll-option {
+            background: var(--card-bg);
+            border: 3px solid transparent;
+            padding: 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 3rem;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .poll-option:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-red);
+        }
+
+        .poll-option.selected {
+            border-color: var(--primary-red);
+            background: rgba(199, 54, 47, 0.1);
+        }
+
+        .poll-results {
+            display: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .poll-results.show {
+            display: block;
+        }
+
+        .result-bar {
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .result-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .result-progress {
+            background: var(--accent-color);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .result-fill {
+            background: var(--primary-red);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ==================== SECTION 7: FUN FACTS ==================== */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .fact-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow);
+            text-align: left;
+        }
+
+        .fact-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .fact-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ==================== SECTION 8: SHORT VIDEOS ==================== */
+        .videos-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .video-button {
+            background: var(--card-bg);
+            border: 2px solid var(--primary-red);
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-red);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .video-button:hover {
+            background: var(--primary-red);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* ==================== SECTION 9: IMAGE GALLERY ==================== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            aspect-ratio: 1;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* ==================== SECTION 10: CLOSING ==================== */
+        .closing-content {
+            animation: fadeInUp 1s ease;
+        }
+
+        .closing-message {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            font-weight: 600;
+        }
+
+        /* ==================== NAVIGATION ARROWS ==================== */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .nav-arrow:hover {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.prev {
+            left: 2rem;
+        }
+
+        .nav-arrow.next {
+            right: 2rem;
+        }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            background: var(--bg-color);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            box-shadow: 0 -2px 10px var(--shadow);
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section-content {
+                aspect-ratio: auto;
+            }
+
+            .history-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .nav-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .nav-arrow.prev {
+                left: 1rem;
+            }
+
+            .nav-arrow.next {
+                right: 1rem;
+            }
+
+            .poll-options {
+                gap: 1rem;
+            }
+
+            .poll-option {
+                padding: 1.5rem;
+                font-size: 2.5rem;
+            }
+        }
+
+        /* ==================== ACCESSIBILITY ==================== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus styles */
+        button:focus,
+        a:focus {
+            outline: 3px solid var(--primary-red);
+            outline-offset: 3px;
+        }
+
+        /* ==================== SECTION TITLES ==================== */
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header>
+        <div class="logo">TAKOYAKI</div>
+        <div class="controls">
+            <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">🌓</button>
+            <div class="progress-indicator" aria-live="polite">
+                <span id="currentSection">1</span> / <span id="totalSections">10</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+        <!-- SECTION 1: HERO -->
+        <section class="section active" id="section-1" data-section="1">
+            <div class="section-content hero-content">
+                <h1 class="hero-title">TAKOYAKI</h1>
+                <p class="hero-question">When you think of Japanese street food, what comes first to your mind?</p>
+                <button class="btn-primary" onclick="nextSection()" aria-label="Start presentation">Start</button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: WHAT IS TAKOYAKI -->
+        <section class="section" id="section-2" data-section="2">
+            <div class="section-content definition-content">
+                <h2 class="section-title">What is Takoyaki?</h2>
+                <p class="definition-text">
+                    Takoyaki are crispy-outside, gooey-inside octopus balls from Osaka. 
+                    These bite-sized snacks are made with wheat batter, filled with tender octopus pieces, 
+                    and topped with savory sauce and dancing bonito flakes.
+                </p>
+                <img src="imgs/takoyaki-1.png" alt="Delicious takoyaki balls with sauce and toppings" class="definition-image" loading="lazy">
+            </div>
+        </section>
+
+        <!-- SECTION 3: ORIGIN & HISTORY -->
+        <section class="section" id="section-3" data-section="3">
+            <div class="section-content">
+                <h2 class="section-title">Origin & History</h2>
+                <div class="history-container">
+                    <ul class="history-list">
+                        <li>Born in Osaka, 1935 by Tomekichi Endo</li>
+                        <li>Evolved from choboyaki and akashiyaki snacks</li>
+                        <li>Spread nationwide after World War II</li>
+                        <li>Now a festival and street food icon</li>
+                    </ul>
+                    <div class="story-nugget">
+                        💡 Did you know? The original Aizuya shop still serves takoyaki without sauce or mayo, 
+                        staying true to the 1935 recipe!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: INGREDIENTS -->
+        <section class="section" id="section-4" data-section="4">
+            <div class="section-content">
+                <h2 class="section-title">Key Ingredients</h2>
+                <div class="ingredients-grid">
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🌾</div>
+                        <div class="ingredient-name">Wheat Flour</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🍜</div>
+                        <div class="ingredient-name">Dashi Stock</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🐙</div>
+                        <div class="ingredient-name">Octopus</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🧅</div>
+                        <div class="ingredient-name">Green Onion</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🫚</div>
+                        <div class="ingredient-name">Pickled Ginger</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🍶</div>
+                        <div class="ingredient-name">Takoyaki Sauce</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🥚</div>
+                        <div class="ingredient-name">Mayo</div>
+                    </div>
+                    <div class="ingredient-card">
+                        <div class="ingredient-icon">🐟</div>
+                        <div class="ingredient-name">Bonito Flakes</div>
+                    </div>
+                </div>
+                <div class="ingredients-images" style="display: flex; gap: 1.5rem; margin-top: 2rem; justify-content: center; flex-wrap: wrap;">
+                    <img src="imgs/ingredients-1.png" alt="Takoyaki ingredients display" class="definition-image" loading="lazy" style="max-width: 450px;">
+                    <img src="imgs/ingredients-2.png" alt="Fresh takoyaki ingredients" class="definition-image" loading="lazy" style="max-width: 450px;">
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: HOW IT'S MADE -->
+        <section class="section" id="section-5" data-section="5">
+            <div class="section-content">
+                <h2 class="section-title">How It's Made</h2>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Mix</div>
+                        <p>Combine flour, dashi, and eggs into smooth batter</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Pour</div>
+                        <p>Fill special pan molds with batter</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Add Octopus</div>
+                        <p>Drop octopus pieces and toppings into each mold</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Flip & Serve</div>
+                        <p>Rotate balls until golden brown, then top with sauce</p>
+                    </div>
+                </div>
+                <img src="imgs/how-to-make-takoyaki-1.png" alt="Takoyaki being cooked in traditional pan" class="process-image" loading="lazy">
+            </div>
+        </section>
+
+        <!-- SECTION 6: TRY & REACT (POLL) -->
+        <section class="section" id="section-6" data-section="6">
+            <div class="section-content poll-container">
+                <h2 class="section-title">Try & React</h2>
+                <p class="poll-question">After tasting Takoyaki, how do you feel?</p>
+                <div class="poll-options">
+                    <button class="poll-option" data-emoji="😍" onclick="vote('😍')" aria-label="Love it">😍</button>
+                    <button class="poll-option" data-emoji="😋" onclick="vote('😋')" aria-label="Delicious">😋</button>
+                    <button class="poll-option" data-emoji="🤔" onclick="vote('🤔')" aria-label="Interesting">🤔</button>
+                    <button class="poll-option" data-emoji="😶" onclick="vote('😶')" aria-label="Neutral">😶</button>
+                </div>
+                <div class="poll-results" id="pollResults">
+                    <h3 style="margin-bottom: 1.5rem;">Results</h3>
+                    <div class="result-bar">
+                        <div class="result-label">
+                            <span>😍 Love it</span>
+                            <span id="percent-love">0%</span>
+                        </div>
+                        <div class="result-progress">
+                            <div class="result-fill" id="fill-love" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="result-bar">
+                        <div class="result-label">
+                            <span>😋 Delicious</span>
+                            <span id="percent-delicious">0%</span>
+                        </div>
+                        <div class="result-progress">
+                            <div class="result-fill" id="fill-delicious" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="result-bar">
+                        <div class="result-label">
+                            <span>🤔 Interesting</span>
+                            <span id="percent-interesting">0%</span>
+                        </div>
+                        <div class="result-progress">
+                            <div class="result-fill" id="fill-interesting" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="result-bar">
+                        <div class="result-label">
+                            <span>😶 Neutral</span>
+                            <span id="percent-neutral">0%</span>
+                        </div>
+                        <div class="result-progress">
+                            <div class="result-fill" id="fill-neutral" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: FUN FACTS -->
+        <section class="section" id="section-7" data-section="7">
+            <div class="section-content">
+                <h2 class="section-title">Fun Facts</h2>
+                <div class="facts-grid">
+                    <div class="fact-card">
+                        <div class="fact-icon">🎪</div>
+                        <p class="fact-text">Takoyaki stalls are essential at Japanese festivals and street markets</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🔄</div>
+                        <p class="fact-text">Professional cooks flip takoyaki at lightning speed using special picks</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">⏱️</div>
+                        <p class="fact-text">Each batch takes only 3-5 minutes to cook perfectly</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🧀</div>
+                        <p class="fact-text">Modern variations include cheese, bacon, and even kimchi fillings</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🌊</div>
+                        <p class="fact-text">The bonito flakes "dance" on top due to the heat—it's mesmerizing!</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🏪</div>
+                        <p class="fact-text">You can find takoyaki in convenience stores across Japan 24/7</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🌏</div>
+                        <p class="fact-text">Takoyaki has become popular worldwide, especially in Taiwan and Southeast Asia</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: SHORT VIDEOS -->
+        <section class="section" id="section-8" data-section="8">
+            <div class="section-content videos-container">
+                <h2 class="section-title">Watch & Learn</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">Check out these amazing takoyaki videos</p>
+                <a href="https://youtube.com/shorts/example1" target="_blank" rel="noopener" class="video-button">
+                    📹 How to Make Takoyaki at Home
+                </a>
+                <a href="https://youtube.com/shorts/example2" target="_blank" rel="noopener" class="video-button">
+                    📹 Street Vendor Master Skills
+                </a>
+                <a href="https://youtube.com/shorts/example3" target="_blank" rel="noopener" class="video-button">
+                    📹 Takoyaki Festival in Osaka
+                </a>
+                <a href="https://youtube.com/shorts/example4" target="_blank" rel="noopener" class="video-button">
+                    📹 Trying Different Takoyaki Flavors
+                </a>
+                <p style="font-size: 0.9rem; margin-top: 2rem; opacity: 0.7;">
+                    * Replace URLs with your favorite takoyaki videos
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 9: IMAGE GALLERY -->
+        <section class="section" id="section-9" data-section="9">
+            <div class="section-content">
+                <h2 class="section-title">Image Gallery</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item" onclick="openLightbox('imgs/takoyaki-1.png')">
+                        <img src="imgs/takoyaki-1.png" alt="Takoyaki platter" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('imgs/takoyaki-2.png')">
+                        <img src="imgs/takoyaki-2.png" alt="Takoyaki close-up" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('imgs/ingredients-1.png')">
+                        <img src="imgs/ingredients-1.png" alt="Takoyaki ingredients" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('imgs/ingredients-2.png')">
+                        <img src="imgs/ingredients-2.png" alt="Fresh ingredients" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('imgs/how-to-make-takoyaki-1.png')">
+                        <img src="imgs/how-to-make-takoyaki-1.png" alt="Cooking process" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('imgs/how-to-make-takoyaki-2.png')">
+                        <img src="imgs/how-to-make-takoyaki-2.png" alt="Takoyaki pan" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 10: CLOSING -->
+        <section class="section" id="section-10" data-section="10">
+            <div class="section-content closing-content">
+                <h2 class="section-title">Thanks for Joining!</h2>
+                <p class="closing-message">
+                    Street food, friendly vibes. Would you try a different topping next time?
+                </p>
+                <button class="btn-primary" onclick="goToSection(1)" aria-label="Go back to start">Back to Start</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== NAVIGATION ARROWS ==================== -->
+    <button class="nav-arrow prev" onclick="prevSection()" aria-label="Previous section">←</button>
+    <button class="nav-arrow next" onclick="nextSection()" aria-label="Next section">→</button>
+
+    <!-- ==================== LIGHTBOX ==================== -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" aria-label="Close lightbox">✕</button>
+        <img id="lightbox-img" src="" alt="Gallery image enlarged">
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <p>Created with ❤️ for Japanese Street Food Lovers | © 2025</p>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ==================== STATE MANAGEMENT ====================
+        let currentSection = 1;
+        const totalSections = 10;
+        
+        // Poll votes storage
+        let pollVotes = {
+            '😍': 0,
+            '😋': 0,
+            '🤔': 0,
+            '😶': 0
+        };
+        let hasVoted = false;
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load theme from localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Load poll votes from localStorage
+            const savedVotes = localStorage.getItem('pollVotes');
+            if (savedVotes) {
+                pollVotes = JSON.parse(savedVotes);
+                updatePollDisplay();
+            }
+            
+            updateProgress();
+        });
+
+        // ==================== NAVIGATION FUNCTIONS ====================
+        function goToSection(n) {
+            if (n < 1 || n > totalSections) return;
+            
+            // Hide current section
+            const current = document.querySelector('.section.active');
+            if (current) {
+                current.classList.remove('active');
+            }
+            
+            // Show new section
+            const next = document.getElementById(`section-${n}`);
+            if (next) {
+                next.classList.add('active');
+                currentSection = n;
+                updateProgress();
+                
+                // Announce to screen readers
+                announceSection(n);
+            }
+        }
+
+        function nextSection() {
+            goToSection(currentSection + 1);
+        }
+
+        function prevSection() {
+            goToSection(currentSection - 1);
+        }
+
+        function updateProgress() {
+            document.getElementById('currentSection').textContent = currentSection;
+            document.getElementById('totalSections').textContent = totalSections;
+        }
+
+        function announceSection(n) {
+            const titles = [
+                'Hero',
+                'What is Takoyaki',
+                'Origin and History',
+                'Ingredients',
+                'How It\'s Made',
+                'Try and React',
+                'Fun Facts',
+                'Short Videos',
+                'Image Gallery',
+                'Closing'
+            ];
+            
+            // Create temporary announcement for screen readers
+            const announcement = document.createElement('div');
+            announcement.className = 'sr-only';
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.textContent = `Section ${n}: ${titles[n - 1]}`;
+            document.body.appendChild(announcement);
+            
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+
+        // ==================== KEYBOARD NAVIGATION ====================
+        document.addEventListener('keydown', (e) => {
+            // Don't navigate if user is typing in an input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                nextSection();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                prevSection();
+            }
+        });
+
+        // ==================== THEME TOGGLE ====================
+        document.querySelector('.theme-toggle').addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // ==================== POLL FUNCTIONALITY ====================
+        function vote(emoji) {
+            if (hasVoted) return;
+            
+            // Record vote
+            pollVotes[emoji]++;
+            hasVoted = true;
+            
+            // Save to localStorage
+            localStorage.setItem('pollVotes', JSON.stringify(pollVotes));
+            
+            // Mark selected option
+            const options = document.querySelectorAll('.poll-option');
+            options.forEach(option => {
+                if (option.dataset.emoji === emoji) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // Show results after a brief delay
+            setTimeout(() => {
+                updatePollDisplay();
+                document.getElementById('pollResults').classList.add('show');
+            }, 500);
+        }
+
+        function updatePollDisplay() {
+            const total = Object.values(pollVotes).reduce((sum, val) => sum + val, 0);
+            
+            if (total === 0) return;
+            
+            // Calculate percentages
+            const percentages = {
+                '😍': Math.round((pollVotes['😍'] / total) * 100),
+                '😋': Math.round((pollVotes['😋'] / total) * 100),
+                '🤔': Math.round((pollVotes['🤔'] / total) * 100),
+                '😶': Math.round((pollVotes['😶'] / total) * 100)
+            };
+            
+            // Update display
+            document.getElementById('percent-love').textContent = percentages['😍'] + '%';
+            document.getElementById('fill-love').style.width = percentages['😍'] + '%';
+            
+            document.getElementById('percent-delicious').textContent = percentages['😋'] + '%';
+            document.getElementById('fill-delicious').style.width = percentages['😋'] + '%';
+            
+            document.getElementById('percent-interesting').textContent = percentages['🤔'] + '%';
+            document.getElementById('fill-interesting').style.width = percentages['🤔'] + '%';
+            
+            document.getElementById('percent-neutral').textContent = percentages['😶'] + '%';
+            document.getElementById('fill-neutral').style.width = percentages['😶'] + '%';
+        }
+
+        // ==================== LIGHTBOX FUNCTIONALITY ====================
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Prevent lightbox close when clicking on image
+        document.getElementById('lightbox-img').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        document.querySelector('.lightbox-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeLightbox();
+        });
+
+        // ==================== TOUCH SWIPE SUPPORT (Mobile) ====================
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swiped left - next section
+                    nextSection();
+                } else {
+                    // Swiped right - previous section
+                    prevSection();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
